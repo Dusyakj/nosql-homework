@@ -1,22 +1,23 @@
--- Решение заданий по ClickHouse
-
--- 1. Создание таблицы
--- TODO: скопируйте и доработайте CREATE TABLE из schema.sql
-
-
--- 2. Загрузка данных из CSV
--- Подсказка: можно использовать clickhouse-client с параметром --query
--- Пример команды (выполняется в терминале):
--- cat server_logs.csv | clickhouse-client --query="INSERT INTO server_logs FORMAT CSVWithNames"
+SELECT
+    endpoint,
+    avg(response_time_ms) AS avg_response_time_ms
+FROM server_logs
+GROUP BY endpoint
+ORDER BY avg_response_time_ms DESC
+LIMIT 5;
 
 
--- 3. Запрос: Топ-5 самых медленных endpoint'ов (по среднему времени ответа)
--- TODO: напишите SELECT запрос
+SELECT
+    toStartOfHour(timestamp) AS hour,
+    count() AS request_count
+FROM server_logs
+GROUP BY hour
+ORDER BY hour;
 
 
--- 4. Запрос: Количество запросов по часам за весь период в логах
--- TODO: напишите SELECT запрос с использованием функции toHour() или formatDateTime()
-
-
--- 5. Запрос: Процент ошибок (status_code >= 400) для каждого endpoint'а
--- TODO: напишите SELECT запрос с вычислением процента ошибок
+SELECT
+    endpoint,
+    countIf(status_code >= 400) * 100.0 / count() AS error_percent
+FROM server_logs
+GROUP BY endpoint
+ORDER BY error_percent DESC;

@@ -4,9 +4,10 @@
 -- Пример структуры (необходимо дополнить):
 CREATE TABLE IF NOT EXISTS server_logs
 (
-    -- TODO: определите поля таблицы на основе файла server_logs.csv
-    -- Используйте подходящие типы данных ClickHouse
-    -- Выберите подходящий движок (например, MergeTree)
-    -- Укажите ORDER BY для оптимизации запросов
+    timestamp DateTime,
+    user_id UInt32,
+    endpoint String,
+    response_time_ms UInt32,
+    status_code UInt16
 ) ENGINE = MergeTree()
-ORDER BY (); -- TODO: выберите подходящий порядок сортировки
+ORDER BY (endpoint, timestamp);

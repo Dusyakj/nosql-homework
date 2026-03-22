@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Instant;
+import java.util.UUID;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -22,8 +23,24 @@ public class RateLimiter {
   }
 
   public boolean pass() {
-    // TODO: Implementation
-    return false;
+    if (maxRequestCount <= 0) {
+      return false;
+    }
+
+    long now = System.currentTimeMillis();
+    long windowMillis = timeWindowSeconds * 1000;
+
+    redis.zremrangeByScore(label, "-inf", Long.toString(now - windowMillis));
+
+    long currentCount = redis.zcard(label);
+    if (currentCount >= maxRequestCount) {
+      redis.pexpire(label, windowMillis);
+      return false;
+    }
+
+    redis.zadd(label, now, now + "-" + UUID.randomUUID());
+    redis.pexpire(label, windowMillis);
+    return true;
   }
 
   public static void main(String[] args) {
