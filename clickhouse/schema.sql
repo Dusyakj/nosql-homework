@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS server_logs
     response_time_ms UInt32,
     status_code UInt16
 ) ENGINE = MergeTree()
-ORDER BY (endpoint, timestamp);
+ORDER BY (timestamp, endpoint);

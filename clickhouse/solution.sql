@@ -8,7 +8,7 @@ LIMIT 5;
 
 
 SELECT
-    toStartOfHour(timestamp) AS hour,
+    toHour(timestamp) AS hour,
     count() AS request_count
 FROM server_logs
 GROUP BY hour

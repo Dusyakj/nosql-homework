@@ -34,7 +34,6 @@ public class RateLimiter {
 
     long currentCount = redis.zcard(label);
     if (currentCount >= maxRequestCount) {
-      redis.pexpire(label, windowMillis);
       return false;
     }
 

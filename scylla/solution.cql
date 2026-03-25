@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS posts_by_user (
     post_id int,
     username text,
     content text,
-    topic_id int,
     PRIMARY KEY ((user_id), created_at, post_id)
 ) WITH CLUSTERING ORDER BY (created_at DESC, post_id DESC);
 
@@ -33,7 +32,6 @@ CREATE TABLE IF NOT EXISTS posts_by_topic_day (
     post_id int,
     user_id int,
     username text,
-    content text,
     PRIMARY KEY ((topic_id, post_date), created_at, post_id)
 ) WITH CLUSTERING ORDER BY (created_at DESC, post_id DESC);
 
